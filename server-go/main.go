@@ -113,7 +113,7 @@ func main() {
 		Addr:          env("HG_ADDR", ":38080"),
 		DataDir:       env("HG_DATA_DIR", "./data"),
 		MediaDir:      env("HG_MEDIA_DIR", "./data/media"),
-		DefaultUser:   env("HG_DEFAULT_USER", "fuyou"),
+		DefaultUser:   env("HG_DEFAULT_USER", "admin"),
 		DefaultPass:   env("HG_DEFAULT_PASS", "12345678"),
 		SessionSecret: env("HG_SESSION_SECRET", "change-me-in-production"),
 	}
