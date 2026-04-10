@@ -41,7 +41,7 @@ docker compose up -d --build
 ```
 
 Open: `http://<server-ip>:38080`  
-Default username: `fuyou`  
+Default username: `admin`  
 Default password: `12345678`
 
 ### 2) Build the client
