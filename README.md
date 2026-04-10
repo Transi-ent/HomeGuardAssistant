@@ -40,7 +40,7 @@ docker compose up -d --build
 ```
 
 访问：`http://<server-ip>:38080`  
-默认账号：`fuyou`  
+默认账号：`admin`  
 默认密码：`12345678`
 
 ### 2) 构建客户端
