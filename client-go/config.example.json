@@ -1,0 +1,11 @@
+{
+  "server_http": "http://127.0.0.1:38080",
+  "server_ws": "ws://127.0.0.1:38080/ws/device",
+  "device_id": "",
+  "device_secret": "",
+  "device_name": "homeguard-client",
+  "outbox_dir": "./outbox",
+  "camera_device": "/dev/video0",
+  "max_storage_bytes": 5368709120,
+  "poll_interval_seconds": 10
+}

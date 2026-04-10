@@ -1,0 +1,16 @@
+.data/
+*.db
+*.log
+server-go/data/
+client-go/outbox/
+client-go/homeguard-client
+client-go/dist/
+.idea/
+.vscode/
+*.exe
+*.dll
+*.so
+*.dylib
+*.out
+*.test
+*.tmp

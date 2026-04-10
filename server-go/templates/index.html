@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HomeGuard Console</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header class="topbar">
+  <h1>HomeGuard 控制台</h1>
+  <a class="btn ghost" href="/logout">退出</a>
+</header>
+
+<section class="stats">
+  <div class="card"><div class="k">待审批设备</div><div class="v">{{.PendingCount}}</div></div>
+  <div class="card"><div class="k">媒体数量</div><div class="v">{{.MediaCount}}</div></div>
+</section>
+
+<main class="grid">
+  <section class="panel">
+    <h2>设备审批</h2>
+    {{range .Pending}}
+    <div class="row">
+      <div>
+        <b>{{.ID}}</b> {{.Name}} ({{.OS}}/{{.Arch}})
+      </div>
+      <div class="actions">
+        <button class="btn" onclick="approveDevice('{{.ID}}')">同意</button>
+        <button class="btn danger" onclick="rejectDevice('{{.ID}}')">拒绝</button>
+      </div>
+    </div>
+    {{else}}
+    <p class="muted">暂无待审批设备</p>
+    {{end}}
+  </section>
+
+  <section class="panel">
+    <h2>设备与指令</h2>
+    {{range .Devices}}
+    <div class="row">
+      <div>
+        <b>{{.ID}}</b> {{.Name}} | {{.Status}} | online={{.Online}} | {{.LastSeenS}}
+      </div>
+      <div class="actions">
+        <button class="btn" onclick="cmd('{{.ID}}','capture_photo')">拍照</button>
+        <button class="btn" onclick="cmd('{{.ID}}','start_record')">开始录像</button>
+        <button class="btn" onclick="cmd('{{.ID}}','stop_record')">停止录像</button>
+      </div>
+    </div>
+    {{else}}
+    <p class="muted">暂无设备</p>
+    {{end}}
+  </section>
+
+  <section class="panel">
+    <h2>定时任务</h2>
+    <form id="schForm" class="inline-form">
+      <input name="device_id" placeholder="device id" required>
+      <select name="type">
+        <option value="capture_photo">capture_photo</option>
+        <option value="record_cycle">record_cycle</option>
+      </select>
+      <input name="interval_seconds" type="number" value="60" min="1" required>
+      <input name="duration_seconds" type="number" value="10" min="1" required>
+      <button class="btn">创建</button>
+    </form>
+    {{range .Schedules}}
+    <div class="row">
+      <div>{{.ID}} | {{.DeviceID}} | {{.Type}} | 每 {{.IntervalSeconds}}s | 时长 {{.DurationSeconds}}s | enabled={{.Enabled}}</div>
+      <div class="actions">
+        <button class="btn" onclick="toggleSchedule('{{.ID}}', {{.Enabled}})">开关</button>
+        <button class="btn danger" onclick="deleteSchedule('{{.ID}}')">删除</button>
+      </div>
+    </div>
+    {{else}}
+    <p class="muted">暂无定时任务</p>
+    {{end}}
+  </section>
+
+  <section class="panel">
+    <h2>媒体库（支持删除）</h2>
+    <div class="media-grid">
+      {{range .Media}}
+      <article class="media-item">
+        {{if eq .Type "photo"}}<img src="{{.URL}}" alt="{{.Name}}">{{end}}
+        {{if eq .Type "video"}}<video src="{{.URL}}" controls></video>{{end}}
+        <div class="meta">{{.Name}} ({{.SizeMB}} MB)</div>
+        <button class="btn danger" onclick="deleteMedia('{{.Name}}')">删除</button>
+      </article>
+      {{else}}
+      <p class="muted">暂无媒体文件</p>
+      {{end}}
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>修改密码</h2>
+    <form id="pwdForm" class="inline-form">
+      <input name="username" value="fuyou" required>
+      <input name="old_password" type="password" placeholder="旧密码" required>
+      <input name="new_password" type="password" placeholder="新密码" required>
+      <button class="btn">更新</button>
+    </form>
+  </section>
+
+  <section class="panel panel-wide">
+    <h2>审计记录（最近 50 条）</h2>
+    <div class="actions"><button class="btn" onclick="refreshAudit()">刷新</button></div>
+    <div id="auditList">
+      {{range .AuditEvents}}
+      <div class="row">
+        <div><b>{{.Action}}</b> | actor={{.Actor}} | target={{.Target}} | {{.Detail}}</div>
+        <div class="muted">{{.CreatedAt}}</div>
+      </div>
+      {{else}}
+      <p class="muted">暂无审计记录</p>
+      {{end}}
+    </div>
+  </section>
+</main>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
